@@ -9,4 +9,8 @@ Route::get('/', [HomeController::class, 'index']);
 Route::get('/restaurants', [RestaurantController::class, 'index']);
 
 Route::get('/foods', [FoodController::class, 'index']);
-?>php
+
+Route::get('/home', [FoodController::class, 'home']);
+Route::get('/restoran', [FoodController::class, 'restoran']);
+Route::get('/pesanan', [FoodController::class, 'pesanan']);
+?>
