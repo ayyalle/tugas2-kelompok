@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 
 class FoodController extends Controller
 {
+    public function index()
+    {
+        return view('foods');
+    }
+
     public function home()
     {
         return view('home');
