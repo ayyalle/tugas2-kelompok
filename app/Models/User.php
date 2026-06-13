@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role', // <-- KELOMPOK KALIAN WAJIB MENAMBAHKAN BARIS INI
     ];
 
     /**
