@@ -187,12 +187,12 @@
         .btn-pesan-langsung {
             display: block; 
             text-align: center; 
-            padding: 10px 15px; 
+            padding: 12px 30px; 
             background: linear-gradient(135deg, #FF8FC7, #FFB5D8); 
             color: white; 
             text-decoration: none; 
             font-weight: bold; 
-            border-radius: 10px; 
+            border-radius: 15px; 
             margin-top: 10px; 
             box-shadow: 0 4px 10px rgba(255, 143, 199, 0.3); 
             transition: 0.3s;
@@ -234,6 +234,10 @@
             <p class="rating">⭐ {{ $resto->rating ?? '0.0' }}</p>
             
             <p class="alamat">{{ $resto->address }}</p>
+
+            <p class="fw-bold" style="font-weight: bold; color: #28a745; margin-top: 5px; font-size: 15px;">
+    Rp {{ number_format($resto->price, 0, ',', '.') }}
+</p>
 
             @if(auth()->check() && auth()->user()->role === 'admin')
                 <form action="{{ route('restaurant.destroy', $resto->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus restoran ini?')">

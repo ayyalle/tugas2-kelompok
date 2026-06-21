@@ -37,3 +37,4 @@ require __DIR__.'/auth.php';
 
 Route::get('/restoran', [FoodController::class, 'restoran'])->name('restoran');
 Route::get('/pesanan', [FoodController::class, 'pesanan'])->name('pesanan');
+Route::get('/restoran', [RestaurantController::class, 'tampilkanWeb']); 

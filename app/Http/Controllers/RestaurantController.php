@@ -2,85 +2,116 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Restaurant; 
+use App\Models\Restaurant;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class RestaurantController extends Controller
 {
-    // MENAMPILKAN SEMUA DATA
+    // Standar PDF: index() untuk Tampil Data
     public function index()
     {
-        $restaurants = Restaurant::all();
-        return view('restoran', compact('restaurants')); 
+        $restoran = Restaurant::all();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data restoran berhasil diambil',
+            'data' => $restoran
+        ], 200);
     }
 
-    // HALAMAN FORM TAMBAH DATA
-    public function create()
-    {
-        if (Auth::user()->role !== 'admin') {
-            abort(403, 'Hanya Admin yang boleh menambah data!');
-        }
-        return view('restaurant_create'); 
-    }
-
-    // PROSES SIMPAN DATA BARU KE DATABASE
+    // Standar PDF: store() untuk Tambah Data (POST)
     public function store(Request $request)
     {
-        if (Auth::user()->role !== 'admin') { abort(403); }
-
-        // 1. Tambahkan price, image, dan rating ke dalam validasi wajib
-        $request->validate([
-            'name' => 'required',
-            'image' => 'required',
-            'rating' => 'required|numeric',
-            'address' => 'required',
-            'price' => 'required|numeric', // <-- WAJIB ADA INI
+        $restoran = Restaurant::create([
+            'name'    => $request->name,
+            'image'   => $request->image,
+            'rating'  => $request->rating,
+            'address' => $request->address,
+            'price'   => $request->price,
         ]);
 
-        // 2. Karena sudah divalidasi, ini aman menyimpan semua input termasuk price
-        Restaurant::create($request->all());
-
-        return redirect()->route('restaurant.index')->with('success', 'Restoran berhasil ditambahkan!');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data menu restoran berhasil ditambahkan!',
+            'data' => $restoran
+        ], 201);
     }
 
-    // HALAMAN FORM EDIT DATA
-    public function edit($id)
-    {
-        if (Auth::user()->role !== 'admin') { abort(403); }
-
-        $restaurant = Restaurant::findOrFail($id);
-        return view('restaurant_edit', compact('restaurant')); 
-    }
-
-    // PROSES UPDATE/UBAH DATA DI DATABASE
+    // Standar PDF: update() untuk Ubah Data (PUT)
     public function update(Request $request, $id)
     {
-        if (Auth::user()->role !== 'admin') { abort(403); }
+        $restoran = Restaurant::find($id);
 
-        // 3. Update juga validasi untuk proses edit biar price ikut tersimpan kalau diubah
-        $request->validate([
-            'name' => 'required',
-            'image' => 'nullable',   
-            'rating' => 'nullable|numeric',
-            'address' => 'required',
-            'price' => 'nullable|numeric', // <-- Tambahkan ini di bagian update
+        if (!$restoran) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
+
+        $restoran->update([
+            'name'    => $request->name,
+            'image'   => $request->image,
+            'rating'  => $request->rating,
+            'address' => $request->address,
+            'price'   => $request->price,
         ]);
 
-        $restaurant = Restaurant::findOrFail($id);
-        $restaurant->update($request->all());
-
-        return redirect()->route('restaurant.index')->with('success', 'Data restoran berhasil diubah!');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data menu restoran berhasil diubah!',
+            'data' => $restoran
+        ], 200);
     }
 
-    // PROSES HAPUS DATA DARI DATABASE
-    public function destroy($id)
+
+    // ==========================================
+    // LANJUTAN: FUNGSI LOGIN ADMIN
+    // ==========================================
+    public function loginAPI(Request $request)
     {
-        if (Auth::user()->role !== 'admin') { abort(403); }
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-        $restaurant = Restaurant::findOrFail($id);
-        $restaurant->delete();
+        // Cari user admin berdasarkan email
+        $user = User::where('email', $request->email)->first();
 
-        return redirect()->route('restaurant.index')->with('success', 'Restoran berhasil dihapus!');
+        // Cek apakah user ada dan passwordnya benar
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Email atau password salah!'
+            ], 401);
+        }
+
+        // Buat token manual token teks tanpa crash guard sanctum
+        $token = $user->createToken('admin-token')->plainTextToken;
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Login Admin Berhasil!',
+            'token' => $token,
+            'user' => $user
+        ], 200);
+    }
+    public function logoutAPI(Request $request)
+{
+    // Menghapus token yang sedang digunakan untuk login saat ini
+    $request->user()->currentAccessToken()->delete();
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Berhasil logout, token telah dihapus!'
+    ], 200);
+}
+        public function tampilkanWeb()
+    {
+    // Menggunakan nama variabel $restaurants agar cocok dengan @foreach di Blade kamu
+    $restaurants = Restaurant::all(); 
+    
+    return view('restoran', compact('restaurants'));
     }
 }
