@@ -12,8 +12,14 @@ use App\Http\Controllers\OrderController; // Ini untuk bagian PESANAN
 Route::get('/', [FoodController::class, 'home']);
 
 // Halaman Dashboard setelah login
+use App\Models\Restaurant;
+
 Route::get('/dashboard', function () {
-    return view('dashboard');
+
+    $restaurants = Restaurant::all();
+
+    return view('dashboard', compact('restaurants'));
+
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Semua rute yang harus LOGIN dulu dimasukkan ke dalam grup ini
@@ -37,4 +43,8 @@ require __DIR__.'/auth.php';
 
 Route::get('/restoran', [FoodController::class, 'restoran'])->name('restoran');
 Route::get('/pesanan', [FoodController::class, 'pesanan'])->name('pesanan');
+
 Route::get('/restoran', [RestaurantController::class, 'tampilkanWeb']); 
+
+Route::get('/restaurant/order/{id}', [FoodController::class, 'order'])->name('restaurant.order');
+ 

@@ -25,7 +25,7 @@
         </h2>
 
         <div style="display: flex; align-items: center; gap: 12px;">
-            <a href="{{ route('restaurant.create') }}" 
+            <a href="<?php echo e(route('restaurant.create')); ?>" 
                style="
                     display: inline-flex;
                     align-items: center;
@@ -45,8 +45,8 @@
                 <span>➕</span> Tambah Restoran
             </a>
 
-            <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                @csrf
+            <form action="<?php echo e(route('logout')); ?>" method="POST" style="margin: 0;">
+                <?php echo csrf_field(); ?>
                 <button type="submit" 
                     style="
                         display: inline-flex;
@@ -81,7 +81,7 @@
         font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     ">
 
-    @foreach($restaurants as $restaurant)
+    <?php $__currentLoopData = $restaurants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $restaurant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
     <div class="restaurant-card" style="
         background: #ffffff;
@@ -109,8 +109,8 @@
                 z-index: 1;
             "></div>
             
-            <img src="{{ asset($restaurant->image) }}"
-                 alt="{{ $restaurant->name }}"
+            <img src="<?php echo e(asset($restaurant->image)); ?>"
+                 alt="<?php echo e($restaurant->name); ?>"
                  style="
                     width: 100%;
                     height: 100%;
@@ -135,7 +135,8 @@
                     -webkit-box-orient: vertical;
                     overflow: hidden;
                 ">
-                    {{ $restaurant->name }}
+                    <?php echo e($restaurant->name); ?>
+
                 </h4>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
@@ -150,7 +151,8 @@
                         align-items: center;
                         gap: 4px;
                     ">
-                        ⭐ {{ number_format($restaurant->rating, 1) }}
+                        ⭐ <?php echo e(number_format($restaurant->rating, 1)); ?>
+
                     </span>
                     
                     <span style="
@@ -158,7 +160,8 @@
                         font-size: 18px;
                         font-weight: 700;
                     ">
-                        Rp{{ number_format($restaurant->price, 0, ',', '.') }}
+                        Rp<?php echo e(number_format($restaurant->price, 0, ',', '.')); ?>
+
                     </span>
                 </div>
 
@@ -173,7 +176,8 @@
                     overflow: hidden;
                     height: 40px;
                 ">
-                    📍 {{ $restaurant->address }}
+                    📍 <?php echo e($restaurant->address); ?>
+
                 </p>
             </div>
 
@@ -182,7 +186,7 @@
                 gap: 12px;
                 margin-top: auto;
             ">
-                <a href="{{ route('restaurant.edit', $restaurant->id) }}"
+                <a href="<?php echo e(route('restaurant.edit', $restaurant->id)); ?>"
                    style="
                     flex: 1;
                     text-align: center;
@@ -201,12 +205,12 @@
                     Edit
                 </a>
 
-                <form action="{{ route('restaurant.destroy', $restaurant->id) }}"
+                <form action="<?php echo e(route('restaurant.destroy', $restaurant->id)); ?>"
                       method="POST"
                       style="flex: 1; margin: 0;"
                       onsubmit="return confirm('Apakah Anda yakin ingin menghapus restoran ini?')">
-                    @csrf
-                    @method('DELETE')
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('DELETE'); ?>
 
                     <button style="
                         width: 100%;
@@ -232,7 +236,7 @@
 
     </div>
 
-    @endforeach
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
     </div>
 </div>
@@ -249,4 +253,4 @@
         border-color: rgba(219, 39, 119, 0.4) !important;
         box-shadow: 0 20px 35px rgba(37, 99, 235, 0.15), 0 20px 35px rgba(219, 39, 119, 0.15) !important;
     }
-</style>
+</style><?php /**PATH C:\Users\dell\tugas2-kelompok\resources\views/dashboard.blade.php ENDPATH**/ ?>
