@@ -12,13 +12,13 @@
             <div class="col-md-6">
                 <div class="card shadow">
                     <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">Form Tambah Restoran (Admin)</h4>
+                        <h4 class="mb-0">Form Tambah Menu (Admin)</h4>
                     </div>
                     <div class="card-body">
                         
                         <form action="{{ route('restaurant.store') }}" method="POST">
                             @csrf <div class="mb-3">
-                                <label for="name" class="form-label">Nama Restoran</label>
+                                <label for="name" class="form-label">Nama Menu</label>
                                 <input type="text" name="name" class="form-control" required>
                             </div>
 

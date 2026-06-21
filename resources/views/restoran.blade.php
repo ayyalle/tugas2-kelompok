@@ -211,11 +211,11 @@
 <h1>🍱 Menu Restaurants</h1>
 <p class="subtitle">Daftar hidangan lezat dan segar di Restoran ALTRYDZA</p>
 
-@if(auth()->check() && auth()->user()->role === 'admin')
-    <div class="admin-action">
+{{-- @if(auth()->check() && auth()->user()->role === 'admin') --}}
+    {{-- <div class="admin-action">
         <a href="{{ route('restaurant.create') }}" class="btn-add">+ Tambah Restoran Baru</a>
-    </div>
-@endif
+    </div> --}}
+{{-- @endif --}}
 
 <div class="container">
     

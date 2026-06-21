@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 class RestaurantController extends Controller
 {
-    // Standar PDF: index() untuk Tampil Data
+    // 1. Tampil Data untuk API
     public function index()
     {
         $restoran = Restaurant::all();
@@ -20,25 +20,39 @@ class RestaurantController extends Controller
         ], 200);
     }
 
-    // Standar PDF: store() untuk Tambah Data (POST)
+    // 2. Fungsi Store Tunggal (Bisa untuk API Postman & Form Web)
     public function store(Request $request)
     {
-        $restoran = Restaurant::create([
-            'name'    => $request->name,
-            'image'   => $request->image,
-            'rating'  => $request->rating,
-            'address' => $request->address,
-            'price'   => $request->price,
+        // Validasi data inputan
+        $request->validate([
+            'name'    => 'required',
+            'address' => 'required',
+            'price'   => 'required|numeric',
         ]);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data menu restoran berhasil ditambahkan!',
-            'data' => $restoran
-        ], 201);
+        // Simpan ke Database
+        $restaurant = new Restaurant();
+        $restaurant->name    = $request->name;
+        $restaurant->address = $request->address;
+        $restaurant->rating  = $request->rating ?? 0;
+        $restaurant->price   = $request->price;
+        $restaurant->image   = $request->image; 
+        $restaurant->save();
+
+        // JIKA DIARSIPKAN LEWAT WEB (Minta halaman HTML/Redirect)
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data menu restoran berhasil ditambahkan via API!',
+                'data' => $restaurant
+            ], 201);
+        }
+
+        // JIKA DIINPUT LEWAT WEB BLADE
+        return redirect('/restoran')->with('success', 'Menu berhasil ditambahkan!');
     }
 
-    // Standar PDF: update() untuk Ubah Data (PUT)
+    // 3. Update Data via API (PUT)
     public function update(Request $request, $id)
     {
         $restoran = Restaurant::find($id);
@@ -65,10 +79,7 @@ class RestaurantController extends Controller
         ], 200);
     }
 
-
-    // ==========================================
-    // LANJUTAN: FUNGSI LOGIN ADMIN
-    // ==========================================
+    // 4. Login API Admin
     public function loginAPI(Request $request)
     {
         $request->validate([
@@ -76,10 +87,8 @@ class RestaurantController extends Controller
             'password' => 'required',
         ]);
 
-        // Cari user admin berdasarkan email
         $user = User::where('email', $request->email)->first();
 
-        // Cek apakah user ada dan passwordnya benar
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
                 'status' => 'error',
@@ -87,7 +96,6 @@ class RestaurantController extends Controller
             ], 401);
         }
 
-        // Buat token manual token teks tanpa crash guard sanctum
         $token = $user->createToken('admin-token')->plainTextToken;
 
         return response()->json([
@@ -97,21 +105,28 @@ class RestaurantController extends Controller
             'user' => $user
         ], 200);
     }
-    public function logoutAPI(Request $request)
-{
-    // Menghapus token yang sedang digunakan untuk login saat ini
-    $request->user()->currentAccessToken()->delete();
 
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Berhasil logout, token telah dihapus!'
-    ], 200);
-}
-        public function tampilkanWeb()
+    // 5. Logout API Admin
+    public function logoutAPI(Request $request)
     {
-    // Menggunakan nama variabel $restaurants agar cocok dengan @foreach di Blade kamu
-    $restaurants = Restaurant::all(); 
-    
-    return view('restoran', compact('restaurants'));
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Berhasil logout, token telah dihapus!'
+        ], 200);
+    }
+
+    // 6. Tampilkan Halaman Daftar Menu (Web Blade)
+    public function tampilkanWeb()
+    {
+        $restaurants = Restaurant::all(); 
+        return view('restoran', compact('restaurants'));
+    }
+
+    // 7. Tampilkan Form Tambah Restoran (Web Blade)
+    public function create()
+    {
+        return view('restaurant_create');
     }
 }
