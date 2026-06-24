@@ -43,7 +43,7 @@
 
                             <div class="d-grid gap-2">
                                 <button type="submit" class="btn btn-success">Simpan ke Database</button>
-                                <a href="{{ route('restaurant.index') }}" class="btn btn-secondary">Kembali</a>
+                                <a href="{{ route('dashboard') }}" class="btn btn-secondary">Kembali</a>
                             </div>
                         </form>
 

@@ -7,65 +7,69 @@
 
     <div style="
         max-width: 1200px;
-        margin: 0 auto 30px auto;
+        margin: 0 auto 40px auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
         font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        border-bottom: 2px solid rgba(219, 39, 119, 0.1);
+        padding-bottom: 20px;
     ">
-        <h2 style="
-            margin: 0;
-            font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #1e40af 0%, #db2777 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        ">
-            Dashboard Restoran
-        </h2>
+        <div>
+            <h2 style="margin: 0 0 5px 0; font-weight: 700; color: #0f172a;">Dashboard Restoran</h2>
+            <span style="
+                font-size: 12px;
+                font-weight: 700;
+                background: #ffffff;
+                color: #be185d;
+                padding: 4px 12px;
+                border-radius: 20px;
+                border: 1px solid rgba(219, 39, 119, 0.2);
+            ">
+                🔑 Role: {{ Auth::user()->role }}
+            </span>
+        </div>
 
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <a href="{{ route('restaurant.create') }}" 
-               style="
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 8px;
-                    background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
-                    color: #ffffff;
+        <div style="display: flex; align-items: center; gap: 15px;">
+            @if(Auth::user()->role == 'admin')
+            <a href="{{ route('restaurant.create') }}" style="
+                background: linear-gradient(135deg, #1e40af 0%, #db2777 100%);
+                color: white;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 14px;
+                font-size: 14px;
+                font-weight: 700;
+                box-shadow: 0 4px 12px rgba(219, 39, 119, 0.2);
+                transition: all 0.2s;
+            "
+            onmouseover="this.style.transform='translateY(-2px)';"
+            onmouseout="this.style.transform='translateY(0)';"
+            >
+                ➕ Tambah Restoran
+            </a>
+            @endif
+
+            <form action="{{ route('logout') }}" method="POST" style="margin: 0;" onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
+                @csrf
+                <button type="submit" style="
+                    background: #ffffff;
+                    color: #be185d;
+                    border: 1px solid rgba(219, 39, 119, 0.2);
                     padding: 10px 20px;
-                    border-radius: 12px;
+                    border-radius: 14px;
                     font-size: 14px;
                     font-weight: 700;
-                    text-decoration: none;
-                    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+                    cursor: pointer;
+                    box-shadow: 0 4px 12px rgba(219, 39, 119, 0.05);
                     transition: all 0.2s ease;
-               "
-               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 18px rgba(37, 99, 235, 0.35)';"
-               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 14px rgba(37, 99, 235, 0.25)';">
-                <span>➕</span> Tambah Restoran
-            </a>
-
-            <form action="{{ route('logout') }}" method="POST" style="margin: 0;">
-                @csrf
-                <button type="submit" 
-                    style="
-                        display: inline-flex;
-                        align-items: center;
-                        gap: 8px;
-                        background: #ffffff;
-                        color: #be185d;
-                        border: 2px solid rgba(219, 39, 119, 0.2);
-                        padding: 10px 20px;
-                        border-radius: 12px;
-                        font-size: 14px;
-                        font-weight: 700;
-                        cursor: pointer;
-                        box-shadow: 0 4px 12px rgba(219, 39, 119, 0.05);
-                        transition: all 0.2s ease;
-                    "
-                    onmouseover="this.style.background='#be185d'; this.style.color='#ffffff'; this.style.transform='translateY(-2px)';"
-                    onmouseout="this.style.background='#ffffff'; this.style.color='#be185d'; this.style.transform='translateY(0)';"
-                    onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                "
+                onmouseover="this.style.background='#be185d'; this.style.color='#ffffff'; this.style.transform='translateY(-2px)';"
+                onmouseout="this.style.background='#ffffff'; this.style.color='#be185d'; this.style.transform='translateY(0)';"
+                >
                     <span>🚪</span> Logout
                 </button>
             </form>
@@ -109,16 +113,16 @@
                 z-index: 1;
             "></div>
             
-            <img src="{{ asset($restaurant->image) }}"
-                 alt="{{ $restaurant->name }}"
-                 style="
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    position: relative;
-                    z-index: 0;
-                    opacity: 0.9;
-                 ">
+            <img src="{{ asset('images/' . $restaurant->image) }}"
+    alt="{{ $restaurant->name }}"
+    style="
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: relative;
+        z-index: 0;
+        opacity: 0.9;
+     ">
         </div>
 
         <div style="padding: 22px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
@@ -177,11 +181,8 @@
                 </p>
             </div>
 
-            <div style="
-                display: flex;
-                gap: 12px;
-                margin-top: auto;
-            ">
+            @if(Auth::user()->role == 'admin')
+            <div style="display: flex; gap: 12px; margin-top: auto;">
                 <a href="{{ route('restaurant.edit', $restaurant->id) }}"
                    style="
                     flex: 1;
@@ -227,6 +228,28 @@
                     </button>
                 </form>
             </div>
+            @else
+            <div style="margin-top: auto;">
+                <a href="{{ route('restaurant.order', $restaurant->id) }}"
+                   style="
+                    display: block;
+                    text-align: center;
+                    background: linear-gradient(135deg, #1e40af 0%, #db2777 100%);
+                    color: white;
+                    padding: 12px;
+                    border-radius: 14px;
+                    text-decoration: none;
+                    font-size: 14px;
+                    font-weight: 700;
+                    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2);
+                    transition: all 0.2s;
+                   "
+                   onmouseover="this.style.transform='scale(1.02)';"
+                   onmouseout="this.style.transform='scale(1)';">
+                    Lihat Menu & Pesan
+                </a>
+            </div>
+            @endif
 
         </div>
 

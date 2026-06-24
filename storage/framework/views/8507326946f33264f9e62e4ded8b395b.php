@@ -1,47 +1,280 @@
-<?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
-<?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('app-layout'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-     <?php $__env->slot('header', null, []); ?> 
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            <?php echo e(__('Dashboard Admin')); ?>
+<div style="
+    background: linear-gradient(135deg, #e0f2fe 0%, #fce7f3 100%);
+    padding: 30px 20px 60px 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
+">
 
-        </h2>
-     <?php $__env->endSlot(); ?>
+    <div style="
+        max-width: 1200px;
+        margin: 0 auto 40px auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        border-bottom: 2px solid rgba(219, 39, 119, 0.1);
+        padding-bottom: 20px;
+    ">
+        <div>
+            <h2 style="margin: 0 0 5px 0; font-weight: 700; color: #0f172a;">Dashboard Restoran</h2>
+            <span style="
+                font-size: 12px;
+                font-weight: 700;
+                background: #ffffff;
+                color: #be185d;
+                padding: 4px 12px;
+                border-radius: 20px;
+                border: 1px solid rgba(219, 39, 119, 0.2);
+            ">
+                🔑 Role: <?php echo e(Auth::user()->role); ?>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-bold mb-2 text-indigo-600">Menejemen Menu</h3>
-                    <p class="text-sm text-gray-600 mb-6">Silakan pilih aksi di bawah untuk mengelola data katalog kuliner kelompok.</p>
+            </span>
+        </div>
 
-                    <div style="display: flex; gap: 15px; margin-top: 20px;">
-                        <a href="<?php echo e(route('restaurant.create')); ?>" style="background-color: #4F46E5; color: white; font-weight: bold; padding: 10px 20px; border-radius: 8px; text-decoration: none; transition: 0.3s;" onmouseover="this.style.backgroundColor='#4338CA'" onmouseout="this.style.backgroundColor='#4F46E5'">
-                            ➕ Tambah Menu Baru
-                        </a>
-                        
-                        <a href="<?php echo e(url('/restoran')); ?>" style="background-color: #4B5563; color: white; font-weight: bold; padding: 10px 20px; border-radius: 8px; text-decoration: none; transition: 0.3s;" onmouseover="this.style.backgroundColor='#374151'" onmouseout="this.style.backgroundColor='#4B5563'">
-                            👁️ Lihat Katalog Web
-                        </a>
-                    </div>
-                </div>
-            </div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <?php if(Auth::user()->role == 'admin'): ?>
+            <a href="<?php echo e(route('restaurant.create')); ?>" style="
+                background: linear-gradient(135deg, #1e40af 0%, #db2777 100%);
+                color: white;
+                text-decoration: none;
+                padding: 10px 20px;
+                border-radius: 14px;
+                font-size: 14px;
+                font-weight: 700;
+                box-shadow: 0 4px 12px rgba(219, 39, 119, 0.2);
+                transition: all 0.2s;
+            "
+            onmouseover="this.style.transform='translateY(-2px)';"
+            onmouseout="this.style.transform='translateY(0)';"
+            >
+                ➕ Tambah Restoran
+            </a>
+            <?php endif; ?>
+
+            <form action="<?php echo e(route('logout')); ?>" method="POST" style="margin: 0;" onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
+                <?php echo csrf_field(); ?>
+                <button type="submit" style="
+                    background: #ffffff;
+                    color: #be185d;
+                    border: 1px solid rgba(219, 39, 119, 0.2);
+                    padding: 10px 20px;
+                    border-radius: 14px;
+                    font-size: 14px;
+                    font-weight: 700;
+                    cursor: pointer;
+                    box-shadow: 0 4px 12px rgba(219, 39, 119, 0.05);
+                    transition: all 0.2s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                "
+                onmouseover="this.style.background='#be185d'; this.style.color='#ffffff'; this.style.transform='translateY(-2px)';"
+                onmouseout="this.style.background='#ffffff'; this.style.color='#be185d'; this.style.transform='translateY(0)';"
+                >
+                    <span>🚪</span> Logout
+                </button>
+            </form>
         </div>
     </div>
- <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
-<?php $attributes = $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
-<?php unset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
-<?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
-<?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
-<?php endif; ?><?php /**PATH C:\xampp new\htdocs\tugas2-kelompok\resources\views/dashboard.blade.php ENDPATH**/ ?>
+
+    <div style="
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        max-width: 1200px;
+        margin: 0 auto;
+        gap: 30px;
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    ">
+
+    <?php $__currentLoopData = $restaurants; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $restaurant): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+
+    <div class="restaurant-card" style="
+        background: #ffffff;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(37, 99, 235, 0.08), 0 10px 25px rgba(219, 39, 119, 0.08);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        border: 1px solid rgba(219, 39, 119, 0.15);
+        position: relative;
+    ">
+
+        <div style="
+            width: 100%; 
+            height: 230px; 
+            overflow: hidden; 
+            position: relative;
+            background: linear-gradient(135deg, #1e40af 0%, #db2777 100%);
+        ">
+            <div style="
+                position: absolute;
+                top: 0; left: 0; width: 100%; height: 100%;
+                background: linear-gradient(to bottom, transparent 40%, rgba(0, 0, 0, 0.4));
+                z-index: 1;
+            "></div>
+            
+            <img src="<?php echo e(asset('images/' . $restaurant->image)); ?>"
+    alt="<?php echo e($restaurant->name); ?>"
+    style="
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: relative;
+        z-index: 0;
+        opacity: 0.9;
+     ">
+        </div>
+
+        <div style="padding: 22px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            
+            <div>
+                <h4 style="
+                    margin: 0 0 10px 0;
+                    font-size: 20px;
+                    font-weight: 700;
+                    color: #0f172a;
+                    line-height: 1.4;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                ">
+                    <?php echo e($restaurant->name); ?>
+
+                </h4>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <span style="
+                        color: #be185d;
+                        font-size: 13px;
+                        font-weight: 700;
+                        background: #fce7f3;
+                        padding: 4px 12px;
+                        border-radius: 30px;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 4px;
+                    ">
+                        ⭐ <?php echo e(number_format($restaurant->rating, 1)); ?>
+
+                    </span>
+                    
+                    <span style="
+                        color: #1d4ed8;
+                        font-size: 18px;
+                        font-weight: 700;
+                    ">
+                        Rp<?php echo e(number_format($restaurant->price, 0, ',', '.')); ?>
+
+                    </span>
+                </div>
+
+                <p style="
+                    font-size: 13.5px;
+                    color: #475569;
+                    margin: 0 0 20px 0;
+                    line-height: 1.5;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    height: 40px;
+                ">
+                    📍 <?php echo e($restaurant->address); ?>
+
+                </p>
+            </div>
+
+            <?php if(Auth::user()->role == 'admin'): ?>
+            <div style="display: flex; gap: 12px; margin-top: auto;">
+                <a href="<?php echo e(route('restaurant.edit', $restaurant->id)); ?>"
+                   style="
+                    flex: 1;
+                    text-align: center;
+                    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+                    color: #1d4ed8;
+                    padding: 12px;
+                    border-radius: 14px;
+                    text-decoration: none;
+                    font-size: 14px;
+                    font-weight: 700;
+                    border: 1px solid rgba(29, 78, 216, 0.2);
+                    transition: all 0.2s;
+                   "
+                   onmouseover="this.style.transform='scale(1.02)'; this.style.background='#bfdbfe'"
+                   onmouseout="this.style.transform='scale(1)'; this.style.background='linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)'">
+                    Edit
+                </a>
+
+                <form action="<?php echo e(route('restaurant.destroy', $restaurant->id)); ?>"
+                      method="POST"
+                      style="flex: 1; margin: 0;"
+                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus restoran ini?')">
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('DELETE'); ?>
+
+                    <button style="
+                        width: 100%;
+                        background: linear-gradient(135deg, #db2777 0%, #be185d 100%);
+                        color: white;
+                        border: none;
+                        padding: 12px;
+                        border-radius: 14px;
+                        font-size: 14px;
+                        font-weight: 700;
+                        cursor: pointer;
+                        box-shadow: 0 4px 14px rgba(219, 39, 119, 0.3);
+                        transition: all 0.2s;
+                    "
+                    onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 6px 18px rgba(219, 39, 119, 0.4)'"
+                    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 14px rgba(219, 39, 119, 0.3)'">
+                        Hapus
+                    </button>
+                </form>
+            </div>
+            <?php else: ?>
+            <div style="margin-top: auto;">
+                <a href="<?php echo e(route('restaurant.order', $restaurant->id)); ?>"
+                   style="
+                    display: block;
+                    text-align: center;
+                    background: linear-gradient(135deg, #1e40af 0%, #db2777 100%);
+                    color: white;
+                    padding: 12px;
+                    border-radius: 14px;
+                    text-decoration: none;
+                    font-size: 14px;
+                    font-weight: 700;
+                    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.2);
+                    transition: all 0.2s;
+                   "
+                   onmouseover="this.style.transform='scale(1.02)';"
+                   onmouseout="this.style.transform='scale(1)';">
+                    Lihat Menu & Pesan
+                </a>
+            </div>
+            <?php endif; ?>
+
+        </div>
+
+    </div>
+
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+    </div>
+</div>
+
+<style>
+    @media (min-width: 992px) {
+        div[style*="grid-template-columns"] {
+            grid-template-columns: repeat(3, 1fr) !important;
+        }
+    }
+    
+    .restaurant-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(219, 39, 119, 0.4) !important;
+        box-shadow: 0 20px 35px rgba(37, 99, 235, 0.15), 0 20px 35px rgba(219, 39, 119, 0.15) !important;
+    }
+</style><?php /**PATH C:\xampp new\htdocs\tugas2-kelompok\resources\views/dashboard.blade.php ENDPATH**/ ?>

@@ -140,4 +140,4 @@
 </body>
 </html>
 
-<?php /**PATH C:\Users\dell\tugas2-kelompok\resources\views/restaurant_edit.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp new\htdocs\tugas2-kelompok\resources\views/restaurant_edit.blade.php ENDPATH**/ ?>

@@ -49,19 +49,22 @@ class RestaurantController extends Controller
         }
 
         // JIKA DIINPUT LEWAT WEB BLADE
-        return redirect('/restoran')->with('success', 'Menu berhasil ditambahkan!');
+        return redirect('/dashboard')->with('success', 'Menu berhasil ditambahkan!');
     }
 
-    // 3. Update Data via API (PUT)
+    // 3. Update Data (Mendukung API JSON & Form Web Blade)
     public function update(Request $request, $id)
     {
         $restoran = Restaurant::find($id);
 
         if (!$restoran) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Data tidak ditemukan'
-            ], 404);
+            if ($request->wantsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Data tidak ditemukan'
+                ], 404);
+            }
+            return redirect('/dashboard')->with('error', 'Data tidak ditemukan');
         }
 
         $restoran->update([
@@ -72,11 +75,17 @@ class RestaurantController extends Controller
             'price'   => $request->price,
         ]);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data menu restoran berhasil diubah!',
-            'data' => $restoran
-        ], 200);
+        // Jika request dari API
+        if ($request->wantsJson() || $request->is('api/*')) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data menu restoran berhasil diubah!',
+                'data' => $restoran
+            ], 200);
+        }
+
+        // Jika request dari form Web biasa
+        return redirect('/dashboard')->with('success', 'Data restoran berhasil diubah!');
     }
 
     // 4. Login API Admin
@@ -121,12 +130,34 @@ class RestaurantController extends Controller
     public function tampilkanWeb()
     {
         $restaurants = Restaurant::all(); 
-        return view('restoran', compact('restaurants'));
+        return view('dashboard', compact('restaurants'));
     }
 
     // 7. Tampilkan Form Tambah Restoran (Web Blade)
     public function create()
     {
         return view('restaurant_create');
+    }
+
+    // ==========================================
+    // TAMBAHAN BARU: FUNGSI UNTUK HALAMAN WEB BLADE
+    // ==========================================
+
+    // 8. Menampilkan Form Edit Restoran
+    public function edit($id)
+    {
+        $restaurant = Restaurant::findOrFail($id);
+        
+        // Membuka view form edit (pastikan nama filenya sesuai, misalnya restaurant_edit.blade.php)
+        return view('restaurant_edit', compact('restaurant'));
+    }
+
+    // 9. Menghapus Data Restoran via Web
+    public function destroy($id)
+    {
+        $restaurant = Restaurant::findOrFail($id);
+        $restaurant->delete();
+
+        return redirect('/dashboard')->with('success', 'Restoran berhasil dihapus!');
     }
 }
