@@ -26,12 +26,13 @@
                 border-radius: 20px;
                 border: 1px solid rgba(219, 39, 119, 0.2);
             ">
-                🔑 Role: {{ Auth::user()->role }}
+                🔑 Role: {{ Auth::user()?->role ?? 'Guest' }}
             </span>
         </div>
 
         <div style="display: flex; align-items: center; gap: 15px;">
-            @if(Auth::user()->role == 'admin')
+            {{-- PERBAIKAN 1: Menggunakan nullsafe operator ?-> --}}
+            @if(Auth::user()?->role == 'admin')
             <a href="{{ route('restaurant.create') }}" style="
                 background: linear-gradient(135deg, #1e40af 0%, #db2777 100%);
                 color: white;
@@ -46,10 +47,12 @@
             onmouseover="this.style.transform='translateY(-2px)';"
             onmouseout="this.style.transform='translateY(0)';"
             >
-                ➕ Tambah Restoran
+                ➕ Tambah Menu
             </a>
             @endif
 
+            {{-- Hanya tampilkan tombol logout jika user sudah login --}}
+            @auth
             <form action="{{ route('logout') }}" method="POST" style="margin: 0;" onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
                 @csrf
                 <button type="submit" style="
@@ -73,6 +76,19 @@
                     <span>🚪</span> Logout
                 </button>
             </form>
+            @else
+            {{-- Opsional: Tombol login jika yang mengakses adalah guest --}}
+            <a href="{{ route('login') }}" style="
+                background: #ffffff;
+                color: #1e40af;
+                border: 1px solid rgba(30, 64, 175, 0.2);
+                padding: 10px 20px;
+                border-radius: 14px;
+                font-size: 14px;
+                font-weight: 700;
+                text-decoration: none;
+            ">🔑 Login</a>
+            @endauth
         </div>
     </div>
 
@@ -181,7 +197,8 @@
                 </p>
             </div>
 
-            @if(Auth::user()->role == 'admin')
+            {{-- PERBAIKAN 2: Menggunakan nullsafe operator ?-> untuk pengecekan Admin --}}
+            @if(Auth::user()?->role == 'admin')
             <div style="display: flex; gap: 12px; margin-top: auto;">
                 <a href="{{ route('restaurant.edit', $restaurant->id) }}"
                    style="
@@ -229,6 +246,7 @@
                 </form>
             </div>
             @else
+            {{-- Tombol untuk user biasa atau tamu (guest) --}}
             <div style="margin-top: auto;">
                 <a href="{{ route('restaurant.order', $restaurant->id) }}"
                    style="

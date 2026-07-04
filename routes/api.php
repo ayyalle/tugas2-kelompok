@@ -10,6 +10,8 @@ Route::get('/restaurants', [RestaurantController::class, 'index']);
 // Rute Login API (Bisa diakses tanpa login)
 Route::post('/login-api', [RestaurantController::class, 'loginAPI']);
 
+Route::delete('restaurants/{id}', [RestaurantController::class, 'destroy']);
+
 // Rute yang wajib LOGIN ADMIN (Dibungkus middleware auth:sanctum)
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/restaurants', [RestaurantController::class, 'store']);

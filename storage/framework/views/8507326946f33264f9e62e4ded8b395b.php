@@ -26,13 +26,14 @@
                 border-radius: 20px;
                 border: 1px solid rgba(219, 39, 119, 0.2);
             ">
-                🔑 Role: <?php echo e(Auth::user()->role); ?>
+                🔑 Role: <?php echo e(Auth::user()?->role ?? 'Guest'); ?>
 
             </span>
         </div>
 
         <div style="display: flex; align-items: center; gap: 15px;">
-            <?php if(Auth::user()->role == 'admin'): ?>
+            
+            <?php if(Auth::user()?->role == 'admin'): ?>
             <a href="<?php echo e(route('restaurant.create')); ?>" style="
                 background: linear-gradient(135deg, #1e40af 0%, #db2777 100%);
                 color: white;
@@ -47,10 +48,12 @@
             onmouseover="this.style.transform='translateY(-2px)';"
             onmouseout="this.style.transform='translateY(0)';"
             >
-                ➕ Tambah Restoran
+                ➕ Tambah Menu
             </a>
             <?php endif; ?>
 
+            
+            <?php if(auth()->guard()->check()): ?>
             <form action="<?php echo e(route('logout')); ?>" method="POST" style="margin: 0;" onsubmit="return confirm('Apakah Anda yakin ingin keluar?')">
                 <?php echo csrf_field(); ?>
                 <button type="submit" style="
@@ -74,6 +77,19 @@
                     <span>🚪</span> Logout
                 </button>
             </form>
+            <?php else: ?>
+            
+            <a href="<?php echo e(route('login')); ?>" style="
+                background: #ffffff;
+                color: #1e40af;
+                border: 1px solid rgba(30, 64, 175, 0.2);
+                padding: 10px 20px;
+                border-radius: 14px;
+                font-size: 14px;
+                font-weight: 700;
+                text-decoration: none;
+            ">🔑 Login</a>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -186,7 +202,8 @@
                 </p>
             </div>
 
-            <?php if(Auth::user()->role == 'admin'): ?>
+            
+            <?php if(Auth::user()?->role == 'admin'): ?>
             <div style="display: flex; gap: 12px; margin-top: auto;">
                 <a href="<?php echo e(route('restaurant.edit', $restaurant->id)); ?>"
                    style="
@@ -234,6 +251,7 @@
                 </form>
             </div>
             <?php else: ?>
+            
             <div style="margin-top: auto;">
                 <a href="<?php echo e(route('restaurant.order', $restaurant->id)); ?>"
                    style="
